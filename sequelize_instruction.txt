@@ -35,3 +35,6 @@ sequelize model:generate \
 sequelize model:generate \
 --name Review \
 --attributes title:string,comment:text,rating:integer,user_id:integer,product_id:integer
+
+# 8. MIGRATE 
+sequelize db:migrate
