@@ -1,0 +1,37 @@
+# 0. CREATE DB (aProEcommerce_db)
+sequelize db:create
+
+# 1. Role
+sequelize model:generate \
+--name Role \
+--attributes name:string,description:text
+
+# 2. Category
+sequelize model:generate \
+--name Category \
+--attributes name:string,description:text
+
+# 3. User
+sequelize model:generate \
+--name User \
+--attributes name:string,email:string,password:string,role_id:integer
+
+# 4. Product
+sequelize model:generate \
+--name Product \
+--attributes name:string,description:text,price:decimal,image_url:string,stock:integer,category_id:integer
+
+# 5. Order
+sequelize model:generate \
+--name Order \
+--attributes order_date:date,total_amount:decimal,status:string,user_id:integer
+
+# 6. OrderItem
+sequelize model:generate \
+--name OrderItem \
+--attributes order_id:integer,product_id:integer,quantity:integer,unit_price:decimal
+
+# 7. Review
+sequelize model:generate \
+--name Review \
+--attributes title:string,comment:text,rating:integer,user_id:integer,product_id:integer
