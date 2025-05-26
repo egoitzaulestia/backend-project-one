@@ -1,5 +1,24 @@
-# 0. CREATE DB (aProEcommerce_db)
+##########
+# SET-UP #
+##########
+
+# 0. INSTALL DEPENDENCIES (This installs all dependencies, express, mysql2, sequelize, nodemon, dotenv...)
+npm istall
+
+# 1. CREATE DB (aProEcommerce_db)
 sequelize db:create
+
+# 2. MIGRATE 
+sequelize db:migrate
+
+# 3. .ENV.EXAMPLE
+copy the file and delete .example, so you will endup with .env (HERE establish you mysql password, root, use, etc.)
+Once you do this, then your sensible/private data will be securely read it in config.js as well as save it (WON'T be uploaded to GITHUB)  
+
+
+#################################################################################
+# SEQUELIZE (it is not neccessary to run as the migrations are already created) #
+#################################################################################
 
 # 1. Role
 sequelize model:generate \
@@ -36,5 +55,3 @@ sequelize model:generate \
 --name Review \
 --attributes title:string,comment:text,rating:integer,user_id:integer,product_id:integer
 
-# 8. MIGRATE 
-sequelize db:migrate
