@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.belongsTo(models.Role);
+      User.hasMany(models.Order);
       User.hasMany(models.Review);
     }
   }
