@@ -20,38 +20,46 @@ Once you do this, then your sensible/private data will be securely read it in co
 # SEQUELIZE (it is not neccessary to run as the migrations are already created) #
 #################################################################################
 
+# 0. Create the DB
+sequelize db:create
+
 # 1. Role
 sequelize model:generate \
---name Role \
---attributes name:string,description:text
+  --name Role \
+  --attributes name:string,description:text
 
 # 2. Category
 sequelize model:generate \
---name Category \
---attributes name:string,description:text
+  --name Category \
+  --attributes name:string,description:text
 
-# 3. User
+# 3. User (FK → RoleId)
 sequelize model:generate \
---name User \
---attributes name:string,email:string,password:string,role_id:integer
+  --name User \
+  --attributes name:string,email:string,password:string,RoleId:integer
 
-# 4. Product
+# 4. Product (no direct CategoryId anymore)
 sequelize model:generate \
---name Product \
---attributes name:string,description:text,price:decimal,image_url:string,stock:integer,category_id:integer
+  --name Product \
+  --attributes name:string,description:text,price:decimal,imageUrl:string,stock:integer
 
-# 5. Order
+# 5. Order (FK → UserId)
 sequelize model:generate \
---name Order \
---attributes order_date:date,total_amount:decimal,status:string,user_id:integer
+  --name Order \
+  --attributes orderDate:date,totalAmount:decimal,status:string,UserId:integer
 
-# 6. OrderItem
+# 6. OrderItem (junction Order⇄Product)
 sequelize model:generate \
---name OrderItem \
---attributes order_id:integer,product_id:integer,quantity:integer,unit_price:decimal
+  --name OrderItem \
+  --attributes OrderId:integer,ProductId:integer,quantity:integer,unitPrice:decimal
 
-# 7. Review
+# 7. Review (FKs → UserId, ProductId)
 sequelize model:generate \
---name Review \
---attributes title:string,comment:text,rating:integer,user_id:integer,product_id:integer
+  --name Review \
+  --attributes title:string,comment:text,rating:integer,UserId:integer,ProductId:integer
+
+# 8. ProductCategory (junction Category⇄Product)
+sequelize model:generate \
+  --name ProductCategory \
+  --attributes ProductId:integer,CategoryId:integer
 
