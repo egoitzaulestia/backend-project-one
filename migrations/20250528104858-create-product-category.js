@@ -46,6 +46,10 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint(
+      'ProductCategories',
+      'unique_product_category',
+    );
     await queryInterface.dropTable('ProductCategories');
   },
 };
