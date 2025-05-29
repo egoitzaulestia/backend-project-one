@@ -38,6 +38,12 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+
+    await queryInterface.addConstraint('ProductCategories', {
+      fields: ['ProductId', 'CategoryId'],
+      type: 'unique',
+      name: 'unique_product_category',
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('ProductCategories');
