@@ -22,6 +22,15 @@ const CategoryController = {
       res.status(500).send({ message: 'Error', error });
     }
   },
+
+  async update(req, res) {
+    try {
+      await Category.update(req.body, {
+        where: { id: req.params.id },
+      });
+      res.status(200).send({ message: 'Category updated...' });
+    } catch (error) {}
+  },
 };
 
 module.exports = CategoryController;
