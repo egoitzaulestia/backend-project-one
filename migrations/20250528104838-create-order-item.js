@@ -44,7 +44,14 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+
+    await queryInterface.addConstraint('OrderItems', {
+      fields: ['OrderId', 'ProductId'],
+      type: 'unique',
+      name: 'unique_order_product',
+    });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('OrderItems');
   },
