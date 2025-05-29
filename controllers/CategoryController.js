@@ -25,10 +25,19 @@ const CategoryController = {
 
   async update(req, res) {
     try {
-      const categoryUpdated = await Category.update(req.body, {
+      const [updated] = await Category.update(req.body, {
         where: { id: req.params.id },
       });
-      res.status(200).send({ message: 'Category updated...', categoryUpdated });
+
+      if (updated === 0) {
+        return res.status(404).send({ message: 'Category no found.' });
+      }
+
+      const updatedCategory = await Category.findByPk(req.params.id);
+      res.status(200).send({
+        message: 'Category updated.',
+        category: updatedCategory,
+      });
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
     }
@@ -39,6 +48,7 @@ const CategoryController = {
       await Category.destroy({
         where: { id: req.params.id },
       });
+      res.status(200).send({ message: 'The product has been deleted.' });
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
     }
