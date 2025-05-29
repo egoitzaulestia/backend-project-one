@@ -34,6 +34,7 @@ module.exports = {
       },
       unitPrice: {
         type: Sequelize.DECIMAL,
+        // type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

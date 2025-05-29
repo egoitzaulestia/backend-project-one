@@ -25,11 +25,23 @@ const CategoryController = {
 
   async update(req, res) {
     try {
-      await Category.update(req.body, {
+      const categoryUpdated = await Category.update(req.body, {
         where: { id: req.params.id },
       });
-      res.status(200).send({ message: 'Category updated...' });
-    } catch (error) {}
+      res.status(200).send({ message: 'Category updated...', categoryUpdated });
+    } catch (error) {
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
+
+  async delete(req, res) {
+    try {
+      await Category.destroy({
+        where: { id: req.params.id },
+      });
+    } catch (error) {
+      res.status(500).send({ message: 'Error', error });
+    }
   },
 };
 
