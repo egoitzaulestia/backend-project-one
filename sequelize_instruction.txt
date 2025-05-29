@@ -1,0 +1,65 @@
+##########
+# SET-UP #
+##########
+
+# 0. INSTALL DEPENDENCIES (This installs all dependencies, express, mysql2, sequelize, nodemon, dotenv...)
+npm istall
+
+# 1. CREATE DB (aProEcommerce_db)
+sequelize db:create
+
+# 2. MIGRATE 
+sequelize db:migrate
+
+# 3. .ENV.EXAMPLE
+copy the file and delete .example, so you will endup with .env (HERE establish you mysql password, root, use, etc.)
+Once you do this, then your sensible/private data will be securely read it in config.js as well as save it (WON'T be uploaded to GITHUB)  
+
+
+#################################################################################
+# SEQUELIZE (it is not neccessary to run as the migrations are already created) #
+#################################################################################
+
+# 0. Create the DB
+sequelize db:create
+
+# 1. Role
+sequelize model:generate \
+  --name Role \
+  --attributes name:string,description:text
+
+# 2. Category
+sequelize model:generate \
+  --name Category \
+  --attributes name:string,description:text
+
+# 3. User (FK → RoleId)
+sequelize model:generate \
+  --name User \
+  --attributes name:string,email:string,password:string,RoleId:integer
+
+# 4. Product (no direct CategoryId anymore)
+sequelize model:generate \
+  --name Product \
+  --attributes name:string,description:text,price:decimal,imageUrl:string,stock:integer
+
+# 5. Order (FK → UserId)
+sequelize model:generate \
+  --name Order \
+  --attributes orderDate:date,totalAmount:decimal,status:string,UserId:integer
+
+# 6. OrderItem (junction Order⇄Product)
+sequelize model:generate \
+  --name OrderItem \
+  --attributes OrderId:integer,ProductId:integer,quantity:integer,unitPrice:decimal
+
+# 7. Review (FKs → UserId, ProductId)
+sequelize model:generate \
+  --name Review \
+  --attributes title:string,comment:text,rating:integer,UserId:integer,ProductId:integer
+
+# 8. ProductCategory (junction Category⇄Product)
+sequelize model:generate \
+  --name ProductCategory \
+  --attributes ProductId:integer,CategoryId:integer
+
