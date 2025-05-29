@@ -10,9 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Category.belongsToMany(models.Product, {
         through: models.ProductCategory,
+        foreignKey: 'CategoryId',
+        otherKey: 'ProductId',
       });
     }
   }
+
   Category.init(
     {
       name: DataTypes.STRING,
@@ -23,5 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Category',
     },
   );
+
   return Category;
 };

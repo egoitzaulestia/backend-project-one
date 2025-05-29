@@ -13,14 +13,19 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ProductId',
         otherKey: 'CategoryId',
       });
+
       Product.belongsToMany(models.Order, {
         through: models.OrderItem,
         foreignKey: 'ProductId',
         otherKey: 'OrderId',
       });
-      Product.hasMany(models.Review, { foreignKey: 'ProductId' });
+
+      Product.hasMany(models.Review, {
+        foreignKey: 'ProductId',
+      });
     }
   }
+
   Product.init(
     {
       name: DataTypes.STRING,
@@ -34,5 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Product',
     },
   );
+
   return Product;
 };

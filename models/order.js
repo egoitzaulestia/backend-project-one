@@ -8,10 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Order.belongsTo(models.User);
-      Order.belongsToMany(models.Product, { through: models.OrderItem });
+      Order.belongsTo(models.User, {
+        foreignKey: 'UserId',
+      });
+
+      Order.belongsToMany(models.Product, {
+        through: models.OrderItem,
+        foreignKey: 'OrderId',
+      });
     }
   }
+
   Order.init(
     {
       orderDate: DataTypes.DATE,
@@ -24,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Order',
     },
   );
+
   return Order;
 };

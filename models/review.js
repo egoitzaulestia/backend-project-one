@@ -8,10 +8,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Review.belongsTo(models.User, { foreignKey: 'UserId' });
-      Review.belongsTo(models.Product, { foreignKey: 'ProductId' });
+      Review.belongsTo(models.User, {
+        foreignKey: 'UserId',
+      });
+
+      Review.belongsTo(models.Product, {
+        foreignKey: 'ProductId',
+      });
     }
   }
+
   Review.init(
     {
       title: DataTypes.STRING,
@@ -25,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Review',
     },
   );
+
   return Review;
 };
