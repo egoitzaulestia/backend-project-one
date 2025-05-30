@@ -23,6 +23,15 @@ const CategoryController = {
     }
   },
 
+  async getAllAlone(req, res) {
+    try {
+      const categories = await Category.findAll();
+      res.status(200).send(categories);
+    } catch (error) {
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
+
   async update(req, res) {
     try {
       const [updated] = await Category.update(req.body, {
