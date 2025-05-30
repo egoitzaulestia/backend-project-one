@@ -10,11 +10,22 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Product.belongsToMany(models.Category, {
         through: models.ProductCategory,
+        foreignKey: 'ProductId',
+        otherKey: 'CategoryId',
       });
-      Product.belongsToMany(models.Order, { through: models.OrderItem });
-      Product.hasMany(models.Review);
+
+      Product.belongsToMany(models.Order, {
+        through: models.OrderItem,
+        foreignKey: 'ProductId',
+        otherKey: 'OrderId',
+      });
+
+      Product.hasMany(models.Review, {
+        foreignKey: 'ProductId',
+      });
     }
   }
+
   Product.init(
     {
       name: DataTypes.STRING,
@@ -28,5 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Product',
     },
   );
+
   return Product;
 };

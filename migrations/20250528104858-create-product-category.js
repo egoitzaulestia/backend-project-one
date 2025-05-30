@@ -11,9 +11,23 @@ module.exports = {
       },
       ProductId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Products',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       CategoryId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Categories',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,
@@ -24,8 +38,18 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+
+    await queryInterface.addConstraint('ProductCategories', {
+      fields: ['ProductId', 'CategoryId'],
+      type: 'unique',
+      name: 'unique_product_category',
+    });
   },
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint(
+      'ProductCategories',
+      'unique_product_category',
+    );
     await queryInterface.dropTable('ProductCategories');
   },
 };

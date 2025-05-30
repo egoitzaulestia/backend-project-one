@@ -17,6 +17,7 @@ module.exports = {
       },
       price: {
         type: Sequelize.DECIMAL,
+        // type: Sequelize.INTEGER,
       },
       imageUrl: {
         type: Sequelize.STRING,
