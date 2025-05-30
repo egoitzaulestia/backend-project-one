@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       totalAmount: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.INTEGER,
       },
       status: {
         type: Sequelize.STRING,
