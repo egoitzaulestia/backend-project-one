@@ -32,6 +32,17 @@ const CategoryController = {
     }
   },
 
+  async getById(req, res) {
+    try {
+      const category = await Category.findOne({
+        where: { id: req.params.id },
+      });
+      res.status(200).send(category);
+    } catch (error) {
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
+
   async update(req, res) {
     try {
       const [updated] = await Category.update(req.body, {
