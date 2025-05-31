@@ -1,4 +1,5 @@
-const { Category, Product } = require('../models/index');
+const { Category, Product, Sequelize } = require('../models/index');
+const { Op } = Sequelize;
 
 const CategoryController = {
   async insert(req, res) {
@@ -55,18 +56,18 @@ const CategoryController = {
     res.status(200).send(category);
   },
 
-  getOneByTitle(req, res) {
-    Post.findOne({
-      where: {
-        title: {
-          [Op.like]: `%${req.params.title}%`,
-        },
-      },
-      include: [User],
-    })
-      .then((post) => res.status(200).send(post))
-      .catch((error) => res.status(500).send({ message: 'Error!', error }));
-  },
+  // getOneByTitle(req, res) {
+  //   Post.findOne({
+  //     where: {
+  //       title: {
+  //         [Op.like]: `%${req.params.title}%`,
+  //       },
+  //     },
+  //     include: [User],
+  //   })
+  //     .then((post) => res.status(200).send(post))
+  //     .catch((error) => res.status(500).send({ message: 'Error!', error }));
+  // },
 
   async update(req, res) {
     try {

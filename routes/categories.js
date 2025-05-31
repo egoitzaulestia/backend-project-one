@@ -6,6 +6,7 @@ router.post('/', CategoryController.insert);
 router.get('/', CategoryController.getAll);
 router.get('/only', CategoryController.getAllAlone);
 router.get('/id/:id', CategoryController.getById);
+router.get('/name/:name', CategoryController.getOneByName);
 router.put('/:id', CategoryController.update);
 router.delete('/:id', CategoryController.delete);
 
