@@ -8,7 +8,7 @@ const authentication = async (req, res, next) => {
     const token = req.headers.authorization;
     const playload = jwt.verify(token, jwt_secret);
     const user = await User.findByPk(playload.id);
-    const tokenFound = await Token.findOnde({
+    const tokenFound = await Token.findOne({
       where: {
         [Op.and]: [{ UserId: user.id }, { token: token }],
       },
@@ -36,6 +36,8 @@ const isAdmin = async (req, res, next) => {
       message: 'You are not athorized as any kind of admin',
     });
   }
+
+  next();
 };
 
 module.exports = { authentication, isAdmin };
