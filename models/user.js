@@ -43,7 +43,11 @@ module.exports = (sequelize, DataTypes) => {
           isEmail: { msg: 'Introduce a valid email, please' },
         },
       },
-      password: DataTypes.STRING,
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { msg: 'Establish a password, please' },
+      },
       RoleId: DataTypes.INTEGER,
     },
     {
