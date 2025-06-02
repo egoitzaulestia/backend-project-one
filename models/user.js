@@ -19,14 +19,35 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Review, {
         foreignKey: 'UserId',
       });
+
+      User.hasMany(models.Token, {
+        foreignKey: 'UserId',
+      });
     }
   }
 
   User.init(
     {
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'Introduce your name, please' },
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'Introduce your email, please' },
+          isEmail: { msg: 'Introduce a valid email, please' },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { msg: 'Establish a password, please' },
+      },
       RoleId: DataTypes.INTEGER,
     },
     {
