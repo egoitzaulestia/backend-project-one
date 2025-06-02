@@ -56,19 +56,6 @@ const CategoryController = {
     res.status(200).send(category);
   },
 
-  // getOneByTitle(req, res) {
-  //   Post.findOne({
-  //     where: {
-  //       title: {
-  //         [Op.like]: `%${req.params.title}%`,
-  //       },
-  //     },
-  //     include: [User],
-  //   })
-  //     .then((post) => res.status(200).send(post))
-  //     .catch((error) => res.status(500).send({ message: 'Error!', error }));
-  // },
-
   async update(req, res) {
     try {
       const [updated] = await Category.update(req.body, {
