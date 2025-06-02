@@ -1,4 +1,71 @@
-const { Order, Product, OrderItem } = require('../models');
+const { Order, Product, OrderItem, sequelize } = require('../models');
+
+const createOrder = async (req, res) => {
+  const { UserId, orderDate, products } = req.body;
+
+  if (!Array.isArray(products) || products.length === 0) {
+    return res.status(400).json({ error: 'Se requiere al menos un producto' });
+  }
+
+  const t = await sequelize.transaction();
+
+  try {
+    // 1. Buscar productos en la BD
+    const productIds = products.map(p => p.ProductId);
+    const foundProducts = await Product.findAll({
+      where: { id: productIds },
+      transaction: t,
+    });
+
+    let totalAmount = 0;
+    const orderItems = [];
+
+    // 2. Calcular montos y preparar datos
+    for (const { ProductId, quantity } of products) {
+      const product = foundProducts.find(p => p.id === ProductId);
+      if (!product) throw new Error(`Producto no encontrado: ${ProductId}`);
+
+      const unitPrice = parseFloat(product.price);
+      totalAmount += unitPrice * quantity;
+
+      orderItems.push({
+        ProductId,
+        quantity,
+        unitPrice,
+      });
+    }
+
+    // 3. Crear el pedido
+    const newOrder = await Order.create({
+      UserId,
+      orderDate,
+      totalAmount,
+      status: 'pending',
+    }, { transaction: t });
+
+    // 4. Crear los items del pedido
+    for (const item of orderItems) {
+      await OrderItem.create({
+        OrderId: newOrder.id,
+        ...item,
+      }, { transaction: t });
+    }
+
+    // 5. Confirmar la transacción
+    await t.commit();
+
+    res.status(201).json({
+      message: 'Pedido creado exitosamente',
+      orderId: newOrder.id,
+    });
+
+  } catch (error) {
+    await t.rollback();
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear el pedido' });
+  }
+};
+
 
 const getOrdersWithProducts = async (req, res) => {
   try {
@@ -22,4 +89,4 @@ const getOrdersWithProducts = async (req, res) => {
   }
 };
 
-module.exports = { getOrdersWithProducts };
+module.exports = { createOrder, getOrdersWithProducts };
