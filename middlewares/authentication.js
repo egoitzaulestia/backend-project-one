@@ -6,7 +6,7 @@ const { jwt_secret } = require('../config/config')['development'];
 const authentication = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const playload = jwt.verify(token, jwt_scret);
+    const playload = jwt.verify(token, jwt_secret);
     const user = await User.findByPk(playload.id);
     const tokenFound = await Token.findOnde({
       where: {
@@ -37,3 +37,5 @@ const isAdmin = async (req, res, next) => {
     });
   }
 };
+
+module.exports = { authentication, isAdmin };
