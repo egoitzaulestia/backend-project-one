@@ -20,9 +20,27 @@ module.exports = (sequelize, DataTypes) => {
 
   Review.init(
     {
-      title: DataTypes.STRING,
-      comment: DataTypes.TEXT,
-      rating: DataTypes.INTEGER,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'Introduce a title, please' },
+        },
+      },
+      comment: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'Introduce a review, please' },
+        },
+      },
+      rating: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: { msg: 'Rate the product, please' },
+        },
+      },
       UserId: DataTypes.INTEGER,
       ProductId: DataTypes.INTEGER,
     },
