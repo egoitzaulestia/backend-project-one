@@ -55,6 +55,20 @@ const ReviewController = {
       res.status(500).send({ message: 'Error', error });
     }
   },
+
+  async delete(req, res) {
+    try {
+      await Review.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.status(200).send({ message: 'The review has been deleted' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
 };
 
 module.exports = ReviewController;
