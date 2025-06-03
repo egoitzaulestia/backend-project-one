@@ -81,7 +81,7 @@ const CategoryController = {
       await Category.destroy({
         where: { id: req.params.id },
       });
-      res.status(200).send({ message: 'The product has been deleted.' });
+      res.status(200).send({ message: 'The Category has been deleted.' });
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
     }
