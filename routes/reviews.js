@@ -4,6 +4,6 @@ const ReviewController = require('../controllers/ReviewController');
 const { authentication } = require('../middlewares/authentication');
 
 // router.use('/', authentication, ReviewController.create);
-router.use('/', authentication, ReviewController.create);
+router.use('/', ReviewController.create);
 
 module.exports = router;

@@ -1,12 +1,19 @@
-const { Review, User, Products, Sequelize } = require('../models/index');
+const { Review, User, Product, Sequelize } = require('../models/index');
 const { Op } = Sequelize;
 
 const ReviewController = {
   async create(req, res) {
     try {
+      const user = await User.findByPk(req.body.UserId);
+      const product = await Product.findByPk(req.body.ProductId);
+
+      if (!user || !product) {
+        return res.status(400).send({ message: 'User or product not found' });
+      }
       const review = await Review.create({
         ...req.body,
-        UserId: req.user.id,
+        UserId: user.id,
+        ProductId: product.id,
       });
       res.status(201).send({
         message: 'Review created successfully',
@@ -15,6 +22,23 @@ const ReviewController = {
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: 'Error', error });
+    }
+  },
+
+  async getAll(req, res) {
+    const reviews = await Review.findAll({
+      include: [{ model: User, through: { attributes: [] } }],
+    });
+  },
+
+  async getAll(req, res) {
+    try {
+      const books = await Book.findAll({
+        include: [{ model: Genre, through: { attributes: [] } }],
+      });
+      res.send(books);
+    } catch (error) {
+      console.error(error);
     }
   },
 };
