@@ -36,6 +36,25 @@ const ReviewController = {
       res.status(500).send({ message: 'Error', error });
     }
   },
+
+  async update(req, res) {
+    try {
+      await Review.update(
+        {
+          title: req.body.title,
+          comment: req.body.comment,
+          rating: req.body.rating,
+        },
+        { where: { id: req.params.id } },
+      );
+
+      const updatedReview = await Review.findByPk(req.params.id);
+      res.status(200).send({ message: 'Review updated', updatedReview });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
 };
 
 module.exports = ReviewController;
