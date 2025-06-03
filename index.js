@@ -7,6 +7,7 @@ app.use(express.json());
 
 app.use('/categories', require('./routes/categories'));
 app.use('/orders', require('./routes/orders'));
+app.use('/reviews', require('./routes/reviews'));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
