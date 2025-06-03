@@ -26,19 +26,14 @@ const ReviewController = {
   },
 
   async getAll(req, res) {
-    const reviews = await Review.findAll({
-      include: [{ model: User, through: { attributes: [] } }],
-    });
-  },
-
-  async getAll(req, res) {
     try {
-      const books = await Book.findAll({
-        include: [{ model: Genre, through: { attributes: [] } }],
+      const reviews = await Review.findAll({
+        include: [{ model: User }, { model: Product }],
       });
-      res.send(books);
+      res.send(reviews);
     } catch (error) {
       console.error(error);
+      res.status(500).send({ message: 'Error', error });
     }
   },
 };
