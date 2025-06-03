@@ -37,19 +37,40 @@ const ReviewController = {
     }
   },
 
+  // async update(req, res) {
+  //   try {
+  //     await Review.update(
+  //       {
+  //         title: req.body.title,
+  //         comment: req.body.comment,
+  //         rating: req.body.rating,
+  //       },
+  //       { where: { id: req.params.id } },
+  //     );
+
+  //     const updatedReview = await Review.findByPk(req.params.id);
+  //     res.status(200).send({ message: 'Review updated', updatedReview });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send({ message: 'Error', error });
+  //   }
+  // },
+
   async update(req, res) {
     try {
-      await Review.update(
-        {
-          title: req.body.title,
-          comment: req.body.comment,
-          rating: req.body.rating,
-        },
-        { where: { id: req.params.id } },
-      );
+      const [updated] = await Review.update(req.body, {
+        where: { id: req.params.id },
+      });
+
+      if (updated === 0) {
+        return res.status(404).send({ message: 'Review not found' });
+      }
 
       const updatedReview = await Review.findByPk(req.params.id);
-      res.status(200).send({ message: 'Review updated', updatedReview });
+      res.status(200).send({
+        message: 'Review updated',
+        review: updatedReview,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: 'Error', error });
@@ -58,11 +79,16 @@ const ReviewController = {
 
   async delete(req, res) {
     try {
-      await Review.destroy({
+      const deleted = await Review.destroy({
         where: {
           id: req.params.id,
         },
       });
+
+      if (deleted === 0) {
+        return res.status(404).send({ message: 'Review not found' });
+      }
+
       res.status(200).send({ message: 'The review has been deleted' });
     } catch (error) {
       console.error(error);

@@ -78,9 +78,14 @@ const CategoryController = {
 
   async delete(req, res) {
     try {
-      await Category.destroy({
+      const deleted = await Category.destroy({
         where: { id: req.params.id },
       });
+
+      if (deleted === 0) {
+        return res.status(404).send({ message: 'Category not found' });
+      }
+
       res.status(200).send({ message: 'The Category has been deleted.' });
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
