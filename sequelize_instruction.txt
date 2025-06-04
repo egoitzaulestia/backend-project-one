@@ -63,3 +63,7 @@ sequelize model:generate \
   --name ProductCategory \
   --attributes ProductId:integer,CategoryId:integer
 
+# 9. Token
+sequelize model:generate \
+  --name Token \
+  --attributes token:string,UserId:integer

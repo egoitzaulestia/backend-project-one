@@ -38,6 +38,11 @@ const CategoryController = {
       const category = await Category.findOne({
         where: { id: req.params.id },
       });
+
+      if (!category) {
+        return res.status(404).send({ message: 'Category not found' });
+      }
+
       res.status(200).send(category);
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
@@ -45,29 +50,25 @@ const CategoryController = {
   },
 
   async getOneByName(req, res) {
-    const category = await Category.findOne({
-      where: {
-        name: {
-          [Op.like]: `%${req.params.name}%`,
+    try {
+      const category = await Category.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${req.params.name}%`,
+          },
         },
-      },
-      include: [Product],
-    });
-    res.status(200).send(category);
-  },
+        include: [Product],
+      });
 
-  // getOneByTitle(req, res) {
-  //   Post.findOne({
-  //     where: {
-  //       title: {
-  //         [Op.like]: `%${req.params.title}%`,
-  //       },
-  //     },
-  //     include: [User],
-  //   })
-  //     .then((post) => res.status(200).send(post))
-  //     .catch((error) => res.status(500).send({ message: 'Error!', error }));
-  // },
+      if (category.length === 0) {
+        return res.status(404).send({ message: 'No categories found' });
+      }
+      res.status(200).send(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
 
   async update(req, res) {
     try {
@@ -91,10 +92,15 @@ const CategoryController = {
 
   async delete(req, res) {
     try {
-      await Category.destroy({
+      const deleted = await Category.destroy({
         where: { id: req.params.id },
       });
-      res.status(200).send({ message: 'The product has been deleted.' });
+
+      if (deleted === 0) {
+        return res.status(404).send({ message: 'Category not found' });
+      }
+
+      res.status(200).send({ message: 'The Category has been deleted.' });
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
     }
