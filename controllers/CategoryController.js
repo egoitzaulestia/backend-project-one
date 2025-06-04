@@ -50,15 +50,24 @@ const CategoryController = {
   },
 
   async getOneByName(req, res) {
-    const category = await Category.findOne({
-      where: {
-        name: {
-          [Op.like]: `%${req.params.name}%`,
+    try {
+      const category = await Category.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${req.params.name}%`,
+          },
         },
-      },
-      include: [Product],
-    });
-    res.status(200).send(category);
+        include: [Product],
+      });
+
+      if (category.length === 0) {
+        return res.status(404).send({ message: 'No categories found' });
+      }
+      res.status(200).send(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error', error });
+    }
   },
 
   async update(req, res) {
