@@ -38,6 +38,11 @@ const CategoryController = {
       const category = await Category.findOne({
         where: { id: req.params.id },
       });
+
+      if (!category) {
+        return res.status(404).send({ message: 'Category not found' });
+      }
+
       res.status(200).send(category);
     } catch (error) {
       res.status(500).send({ message: 'Error', error });
