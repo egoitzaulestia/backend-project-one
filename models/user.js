@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           notNull: { msg: 'Introduce your email, please' },
           isEmail: { msg: 'Introduce a valid email, please' },
@@ -46,8 +47,12 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { msg: 'Establish a password, please' },
-      },
+        validate: {
+        notEmpty: {
+          msg: 'Establish a password, please'
+        }
+      }
+    },
       RoleId: DataTypes.INTEGER,
     },
     {
