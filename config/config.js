@@ -9,6 +9,10 @@ module.exports = {
     host: process.env.DB_HOST_DEV,
     dialect: 'mysql',
     jwt_secret: process.env.JWT_SECRET_DEV,
+    credentials: {
+      user: process.env.NM_EMAIL_USER,
+      pass: process.env.NM_EMAIL_PASS,
+    },
   },
   test: {
     username: process.env.DB_USER_TEST,
