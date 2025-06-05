@@ -6,5 +6,6 @@ const { authentication } = require('../middlewares/authentication');
 router.post('/createUser', UserController.createUser);
 router.post('/login', UserController.login);
 router.post('/logout', authentication, UserController.logout);
+router.get('/loggedUserWithOrders', authentication, UserController.loggedUserWithOrders);
 
 module.exports = router;
