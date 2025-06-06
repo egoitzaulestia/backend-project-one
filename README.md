@@ -77,8 +77,8 @@ Below is the current MySQL schema as visualized in DBeaver:
 
 ## 👥 Authors
 
-Iker Prieto - GitHub Profile
+Iker Prieto - https://github.com/IkerPrieto
 
-Iñaki ... - GitHub Profile
+Iñaki Mínguez - https://github.com/IGNA46img
 
-Egoitz Aulestia - GitHub Profile
+Egoitz Aulestia - https://github.com/egoitzaulestia
