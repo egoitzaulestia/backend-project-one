@@ -77,7 +77,7 @@ const CategoryController = {
       });
 
       if (updated === 0) {
-        return res.status(404).send({ message: 'Category no found.' });
+        return res.status(404).send({ message: 'Category not found.' });
       }
 
       const updatedCategory = await Category.findByPk(req.params.id);
