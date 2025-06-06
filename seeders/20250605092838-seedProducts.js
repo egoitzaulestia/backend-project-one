@@ -5,9 +5,9 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('products', [
       {
-        name: 'Nacidos de la bruma',
-        description: 'Libro de fantasía',
-        price: 330,
+        name: 'Camisa',
+        description: 'Camisa',
+        price: 200,
         imageUrl: 'img.jpg',
         stock: 10,
         createdAt: new Date(),
