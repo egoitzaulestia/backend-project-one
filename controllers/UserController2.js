@@ -4,6 +4,7 @@ const {
   Product,
   Token,
   Order,
+  OrderItem,
   Sequelize,
 } = require('../models/index');
 const { Op } = Sequelize;
@@ -144,6 +145,88 @@ const UserController = {
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: 'Error', error });
+    }
+  },
+
+  // async loggedUserWithOrders(req, res) {
+  //   try {
+  //     const user = await User.findByPk(req.user.id, {
+  //       include: [
+  //         {
+  //           model: Order,
+  //           include: [
+  //             {
+  //               model: OrderItem,
+  //               include: [Product],
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     });
+
+  //     if (!user) {
+  //       return res.status(404).send({ message: 'Usuario no encontrado' });
+  //     }
+
+  //     res.status(200).send(user);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send({ message: 'Error interno del servidor', error });
+  //   }
+  // },
+
+  async loggedUserWithOrders(req, res) {
+    try {
+      const userId = req.user.id;
+
+      const user = await User.findByPk(userId, {
+        attributes: ['id', 'name', 'email'],
+        include: [
+          {
+            model: Order,
+            attributes: ['id', 'orderDate', 'status', 'totalAmount'],
+            include: [
+              {
+                model: OrderItem,
+                attributes: ['quantity', 'unitPrice'],
+                include: [
+                  {
+                    model: Product,
+                    attributes: ['id', 'name'],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!user)
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+
+      // Formatear la salida
+      const result = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        orders: user.Orders.map((order) => ({
+          id: order.id,
+          orderDate: order.orderDate,
+          status: order.status,
+          totalAmount: order.totalAmount,
+          items: order.OrderItems.map((item) => ({
+            productId: item.Product.id,
+            name: item.Product.name,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+          })),
+        })),
+      };
+
+      res.json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
   },
 };

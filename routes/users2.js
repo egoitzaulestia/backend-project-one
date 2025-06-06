@@ -9,5 +9,10 @@ router.get('/confirm/:emailToken', UserController2.confirm);
 router.post('/login', UserController2.login);
 router.delete('/logout', authentication, UserController2.logout);
 router.get('/id/:id', authentication, UserController2.getById);
+router.get(
+  '/loggedUserWithOrders',
+  authentication,
+  UserController2.loggedUserWithOrders,
+);
 
 module.exports = router;

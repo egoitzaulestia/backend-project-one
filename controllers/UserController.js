@@ -8,9 +8,11 @@ const {
   OrderItem,
   Sequelize,
 } = require('../models/index');
+const { Op } = Sequelize;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/config.json')['development'];
+const transporter = require('../config/nodemailer');
 
 const UserController = {
   async createUser(req, res, next) {
@@ -23,20 +25,21 @@ const UserController = {
           .send({ message: 'Todos los campos son obligatorios' });
       }
 
-      const hashedPassword = bcrypt.hash(password, 10);
-      const RoleId = 1;
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      // const RoleId = 1;
 
       const user = await User.create({
         ...req.body,
         password: hashedPassword,
-        RoleId,
+        confirmed: false,
+        RoleId: 1,
       });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
         expiresIn: '48h',
       });
       // IMPORTANT: Correct the "2" in users2 !!!
-      const url = `http://localhost:3000/users2/confirm/${emailToken}`;
+      const url = `http://localhost:3000/users/confirm/${emailToken}`;
       await transporter.sendMail({
         to: req.body.email,
         subject: 'Confirm your regist',
@@ -73,20 +76,51 @@ const UserController = {
     }
   },
 
+  // async login(req, res) {
+  //   try {
+  //     const user = await User.findOne({ where: { email: req.body.email } });
+  //     if (!user) {
+  //       return res
+  //         .status(400)
+  //         .send({ message: 'Usuario o contraseña incorrectos' });
+  //     }
+
+  //     const isMatch = bcrypt.compare(req.body.password, user.password);
+  //     if (!isMatch) {
+  //       return res
+  //         .status(400)
+  //         .send({ message: 'Usuario o contraseña incorrectos' });
+  //     }
+
+  //     if (!user.confirmed) {
+  //       return res.status(400).send({ message: 'You must confirm your email' });
+  //     }
+
+  //     const token = jwt.sign({ id: user.id }, jwt_secret);
+  //     await Token.create({ token, UserId: user.id });
+
+  //     const { password, ...userData } = user.toJSON();
+  //     res.send({ message: `Welcome ${user.name}`, user: userData, token });
+  //   } catch (error) {
+  //     res.status(500).send({ message: 'Error al iniciar sesión', error });
+  //   }
+  // },
+
   async login(req, res) {
     try {
-      const user = await User.findOne({ where: { email: req.body.email } });
+      const user = await User.findOne({
+        where: { email: req.body.email },
+      });
+
       if (!user) {
-        return res
-          .status(400)
-          .send({ message: 'Usuario o contraseña incorrectos' });
+        return res.status(400).send({ message: 'Incorrect user or password' });
       }
 
-      const isMatch = bcrypt.compare(req.body.password, user.password);
+      const inputPassword = req.body.password;
+      const isMatch = await bcrypt.compare(inputPassword, user.password);
+
       if (!isMatch) {
-        return res
-          .status(400)
-          .send({ message: 'Usuario o contraseña incorrectos' });
+        return res.status(400).send({ message: 'Incorrect user or password' });
       }
 
       if (!user.confirmed) {
@@ -94,34 +128,53 @@ const UserController = {
       }
 
       const token = jwt.sign({ id: user.id }, jwt_secret);
-      await Token.create({ token, UserId: user.id });
+      Token.create({ token, UserId: user.id });
 
-      const { password, ...userData } = user.toJSON();
-      res.send({ user: userData, token });
+      res.status(200).send({ message: `Welcome ${user.name}`, user, token });
     } catch (error) {
-      res.status(500).send({ message: 'Error al iniciar sesión', error });
+      console.error(error);
+      res.status(500).send({ message: 'Logging error', error });
     }
   },
 
+  // async logout(req, res) {
+  //   try {
+  //     const token = req.headers.authorization;
+
+  //     if (!token) {
+  //       return res.status(401).send({ message: 'Token no proporcionado' });
+  //     }
+
+  //     const deleted = await Token.destroy({ where: { token } });
+
+  //     if (deleted) {
+  //       return res.send({ message: 'Sesión cerrada exitosamente' });
+  //     } else {
+  //       return res
+  //         .status(400)
+  //         .send({ message: 'Token no encontrado o ya cerrado' });
+  //     }
+  //   } catch (error) {
+  //     res.status(500).send({ message: 'Error al cerrar sesión', error });
+  //   }
+  // },
+
   async logout(req, res) {
     try {
-      const token = req.headers.authorization;
-
-      if (!token) {
-        return res.status(401).send({ message: 'Token no proporcionado' });
-      }
-
-      const deleted = await Token.destroy({ where: { token } });
-
-      if (deleted) {
-        return res.send({ message: 'Sesión cerrada exitosamente' });
-      } else {
-        return res
-          .status(400)
-          .send({ message: 'Token no encontrado o ya cerrado' });
-      }
+      await Token.destroy({
+        where: {
+          [Op.and]: [
+            { UserId: req.user.id },
+            { token: req.headers.authorization },
+          ],
+        },
+      });
+      res.status(200).send({ message: 'Logout successfully' });
     } catch (error) {
-      res.status(500).send({ message: 'Error al cerrar sesión', error });
+      console.error(error);
+      res.status(500).send({
+        message: 'There was a problem while trying to logout',
+      });
     }
   },
 
