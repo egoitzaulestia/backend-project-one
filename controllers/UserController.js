@@ -9,16 +9,16 @@ const UserController = {
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).send({ message: 'Todos los campos son obligatorios' });
+            return res.status(400).send({ message: 'All fields are obligatory' });
         }
 
         const hashedPassword = bcrypt.hashSync(password, 10);
         const RoleId = 1;
 
         const user = await User.create({ ...req.body, password: hashedPassword, RoleId });
-        res.status(201).send({ message: 'Usuario creado con éxito', user });
+        res.status(201).send({ message: 'User created succesfully', user });
     } catch (error) {
-        res.status(500).send({ message: 'Error al crear usuario', error });
+        res.status(500).send({ message: 'Error creating user', error });
     }
 },
 
@@ -26,12 +26,12 @@ const UserController = {
         try {
             const user = await User.findOne({ where: { email: req.body.email } });
             if (!user) {
-                return res.status(400).send({ message: 'Usuario o contraseña incorrectos' });
+                return res.status(400).send({ message: 'User or password are not correct' });
             }
 
             const isMatch = bcrypt.compareSync(req.body.password, user.password);
             if (!isMatch) {
-                return res.status(400).send({ message: 'Usuario o contraseña incorrectos' });
+                return res.status(400).send({ message: 'User or password are not correct' });
             }
 
             const token = jwt.sign({ id: user.id }, jwt_secret);
@@ -41,7 +41,7 @@ const UserController = {
             res.send({ user: userData, token });
 
         } catch (error) {
-            res.status(500).send({ message: 'Error al iniciar sesión', error });
+            res.status(500).send({ message: 'Error while loggin', error });
         }
     },
 
@@ -50,18 +50,18 @@ const UserController = {
         const token = req.headers.authorization;
 
         if (!token) {
-          return res.status(401).send({ message: 'Token no proporcionado' });
+          return res.status(401).send({ message: 'Token not given' });
         }
 
         const deleted = await Token.destroy({ where: { token } });
 
         if (deleted) {
-          return res.send({ message: 'Sesión cerrada exitosamente' });
+          return res.send({ message: 'Session closed succesfully' });
         } else {
-          return res.status(400).send({ message: 'Token no encontrado o ya cerrado' });
+          return res.status(400).send({ message: 'Token not founded or already destroyed' });
         }
       } catch (error) {
-        res.status(500).send({ message: 'Error al cerrar sesión', error });
+        res.status(500).send({ message: 'Error while loggout', error });
       }
     },
 
@@ -91,7 +91,7 @@ const UserController = {
       ]
     });
 
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    if (!user) return res.status(404).json({ error: 'User not founded' });
 
     // Formatear la salida
     const result = {
@@ -116,7 +116,7 @@ const UserController = {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 };

@@ -4,7 +4,7 @@ const createOrder = async (req, res) => {
   const { UserId, orderDate, products } = req.body;
 
   if (!Array.isArray(products) || products.length === 0) {
-    return res.status(400).json({ error: 'Se requiere al menos un producto' });
+    return res.status(400).json({ error: 'At least one product is required' });
   }
 
   const t = await sequelize.transaction();
@@ -23,7 +23,7 @@ const createOrder = async (req, res) => {
     // 2. Calcular total y preparar datos
     for (const { ProductId, quantity } of products) {
       const product = foundProducts.find(p => p.id === ProductId);
-      if (!product) throw new Error(`Producto no encontrado: ${ProductId}`);
+      if (!product) throw new Error(`Product not founded: ${ProductId}`);
 
       const unitPrice = parseFloat(product.price);
       totalAmount += unitPrice * quantity;
@@ -55,14 +55,14 @@ const createOrder = async (req, res) => {
     await t.commit();
 
     res.status(201).json({
-      message: 'Pedido creado exitosamente',
+      message: 'Order created succesfully',
       orderId: newOrder.id,
     });
 
   } catch (error) {
     await t.rollback();
     console.error(error);
-    res.status(500).json({ error: 'Error al crear el pedido' });
+    res.status(500).json({ error: 'Error creating the order' });
   }
 };
 
