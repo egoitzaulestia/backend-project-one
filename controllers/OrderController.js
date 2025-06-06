@@ -55,7 +55,7 @@ const createOrder = async (req, res) => {
     await t.commit();
 
     res.status(201).json({
-      message: 'Order created succesfully',
+      message: 'Order created successfully',
       orderId: newOrder.id,
     });
 

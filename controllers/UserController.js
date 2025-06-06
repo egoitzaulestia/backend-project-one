@@ -16,7 +16,7 @@ const UserController = {
         const RoleId = 1;
 
         const user = await User.create({ ...req.body, password: hashedPassword, RoleId });
-        res.status(201).send({ message: 'User created succesfully', user });
+        res.status(201).send({ message: 'User created successfully', user });
     } catch (error) {
         res.status(500).send({ message: 'Error creating user', error });
     }
@@ -56,7 +56,7 @@ const UserController = {
         const deleted = await Token.destroy({ where: { token } });
 
         if (deleted) {
-          return res.send({ message: 'Session closed succesfully' });
+          return res.send({ message: 'Session closed successfully' });
         } else {
           return res.status(400).send({ message: 'Token not founded or already destroyed' });
         }
