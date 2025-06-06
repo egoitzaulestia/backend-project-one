@@ -20,7 +20,6 @@ const ProductController = {
       });
     } catch (error) {
       console.error(error);
-      // res.status(500).send({ message: "Error creating product", error });
       next(error);
     }
   },

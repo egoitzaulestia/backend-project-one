@@ -1,4 +1,3 @@
-// const { User, Order, OrderItem, Product, Token } = require('../models/index');
 const {
   User,
   Review,
@@ -11,28 +10,25 @@ const {
 const { Op } = Sequelize;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { jwt_secret } = require('../config/config.json')['development'];
+const { jwt_secret } = require('../config/config')['development'];
 const transporter = require('../config/nodemailer');
 
+// IMPORTANT:
+// It's compulsory to create or establish the roles
+// in ROLE TABLE before creating a user
+// 1: 'user'
+// 2: 'admin'
+// 3: 'superadmin'
 const UserController = {
-  async createUser(req, res, next) {
+  async create(req, res, next) {
     try {
-      const { name, email, password } = req.body;
-
-      if (!name || !email || !password) {
-        return res
-          .status(400)
-          .send({ message: 'Todos los campos son obligatorios' });
-      }
-
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      // const RoleId = 1;
 
       const user = await User.create({
         ...req.body,
         password: hashedPassword,
         confirmed: false,
-        RoleId: 1,
+        RoleId: 1, // we initaite every user as 'user' role
       });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
@@ -49,9 +45,11 @@ const UserController = {
         `,
       });
 
-      res.status(201).send({ message: 'Usuario creado con éxito', user });
+      res.status(201).send({
+        message: 'User registered successfully',
+        user,
+      });
     } catch (error) {
-      // res.status(500).send({ message: 'Error al crear usuario', error });
       console.error(error);
       next(error);
     }
@@ -75,36 +73,6 @@ const UserController = {
       res.status(500).send({ message: 'Error', error });
     }
   },
-
-  // async login(req, res) {
-  //   try {
-  //     const user = await User.findOne({ where: { email: req.body.email } });
-  //     if (!user) {
-  //       return res
-  //         .status(400)
-  //         .send({ message: 'Usuario o contraseña incorrectos' });
-  //     }
-
-  //     const isMatch = bcrypt.compare(req.body.password, user.password);
-  //     if (!isMatch) {
-  //       return res
-  //         .status(400)
-  //         .send({ message: 'Usuario o contraseña incorrectos' });
-  //     }
-
-  //     if (!user.confirmed) {
-  //       return res.status(400).send({ message: 'You must confirm your email' });
-  //     }
-
-  //     const token = jwt.sign({ id: user.id }, jwt_secret);
-  //     await Token.create({ token, UserId: user.id });
-
-  //     const { password, ...userData } = user.toJSON();
-  //     res.send({ message: `Welcome ${user.name}`, user: userData, token });
-  //   } catch (error) {
-  //     res.status(500).send({ message: 'Error al iniciar sesión', error });
-  //   }
-  // },
 
   async login(req, res) {
     try {
@@ -137,28 +105,6 @@ const UserController = {
     }
   },
 
-  // async logout(req, res) {
-  //   try {
-  //     const token = req.headers.authorization;
-
-  //     if (!token) {
-  //       return res.status(401).send({ message: 'Token no proporcionado' });
-  //     }
-
-  //     const deleted = await Token.destroy({ where: { token } });
-
-  //     if (deleted) {
-  //       return res.send({ message: 'Sesión cerrada exitosamente' });
-  //     } else {
-  //       return res
-  //         .status(400)
-  //         .send({ message: 'Token no encontrado o ya cerrado' });
-  //     }
-  //   } catch (error) {
-  //     res.status(500).send({ message: 'Error al cerrar sesión', error });
-  //   }
-  // },
-
   async logout(req, res) {
     try {
       await Token.destroy({
@@ -178,58 +124,54 @@ const UserController = {
     }
   },
 
-  async loggedUserWithOrders(req, res) {
+  async getById(req, res) {
     try {
-      const userId = req.user.id;
-
-      const user = await User.findByPk(userId, {
-        attributes: ['id', 'name', 'email'],
+      const user = await User.findOne({
+        where: { id: req.params.id },
         include: [
           {
             model: Order,
-            attributes: ['id', 'orderDate', 'status', 'totalAmount'],
+            include: [{ model: Product, through: { attributes: [] } }],
+          },
+          { model: Review },
+        ],
+      });
+
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+
+      res.status(200).send(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Error', error });
+    }
+  },
+
+  async loggedUserWithOrders(req, res) {
+    try {
+      const user = await User.findByPk(req.user.id, {
+        include: [
+          {
+            model: Order,
             include: [
               {
                 model: OrderItem,
-                attributes: ['quantity', 'unitPrice'],
-                include: [
-                  {
-                    model: Product,
-                    attributes: ['id', 'name'],
-                  },
-                ],
+                include: [Product],
               },
             ],
           },
         ],
       });
 
-      if (!user)
-        return res.status(404).json({ error: 'Usuario no encontrado' });
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
 
-      // Formatear la salida
-      const result = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        orders: user.Orders.map((order) => ({
-          id: order.id,
-          orderDate: order.orderDate,
-          status: order.status,
-          totalAmount: order.totalAmount,
-          items: order.OrderItems.map((item) => ({
-            productId: item.Product.id,
-            name: item.Product.name,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-          })),
-        })),
-      };
-
-      res.json(result);
+      res.status(200).send(user);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error interno del servidor' });
+      res.status(500).send({ message: 'Internal server error', error });
     }
   },
 };
