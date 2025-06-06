@@ -1,12 +1,13 @@
 {
-  "name": "backend-project-one",
+  "name": "personal-backend-project-one",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "starta": "node index.js",
     "dev": "nodemon index.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
@@ -16,6 +17,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
+    "nodemailer": "^7.0.3",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {

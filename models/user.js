@@ -1,12 +1,8 @@
 'use strict';
 const { Model } = require('sequelize');
+const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       User.belongsTo(models.Role, {
         foreignKey: 'RoleId',
@@ -40,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          notNull: { msg: 'Introduce your email, please' },
+          notNull: { msg: 'Introcude your email, please' },
           isEmail: { msg: 'Introduce a valid email, please' },
         },
       },
@@ -48,11 +44,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-        notEmpty: {
-          msg: 'Establish a password, please'
-        }
-      }
-    },
+          notEmpty: { msg: 'Establish a password, please' },
+        },
+      },
+      confirmed: {
+        type: DataTypes.BOOLEAN,
+      },
       RoleId: DataTypes.INTEGER,
     },
     {
@@ -60,6 +57,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User',
     },
   );
-
   return User;
 };

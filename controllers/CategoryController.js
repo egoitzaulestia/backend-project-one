@@ -2,14 +2,15 @@ const { Category, Product, Sequelize } = require('../models/index');
 const { Op } = Sequelize;
 
 const CategoryController = {
-  async insert(req, res) {
+  async insert(req, res, next) {
     try {
       const category = await Category.create(req.body);
       res
         .status(201)
         .send({ message: 'New category created successfully', category });
     } catch (error) {
-      res.status(500).send({ message: 'Error', error });
+      // res.status(500).send({ message: "Error", error });
+      next(error);
     }
   },
 
@@ -77,7 +78,7 @@ const CategoryController = {
       });
 
       if (updated === 0) {
-        return res.status(404).send({ message: 'Category not found.' });
+        return res.status(404).send({ message: 'Category no found.' });
       }
 
       const updatedCategory = await Category.findByPk(req.params.id);
@@ -100,8 +101,9 @@ const CategoryController = {
         return res.status(404).send({ message: 'Category not found' });
       }
 
-      res.status(200).send({ message: 'The Category has been deleted.' });
+      res.status(200).send({ message: 'The category has been deleted.' });
     } catch (error) {
+      console.error(error);
       res.status(500).send({ message: 'Error', error });
     }
   },

@@ -45,7 +45,16 @@ module.exports = {
       name: 'unique_product_category',
     });
   },
+
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint(
+      'ProductCategories',
+      'ProductCategories_ibfk_1',
+    );
+    await queryInterface.removeConstraint(
+      'ProductCategories',
+      'ProductCategories_ibfk_2',
+    );
     await queryInterface.removeConstraint(
       'ProductCategories',
       'unique_product_category',

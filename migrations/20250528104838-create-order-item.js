@@ -53,7 +53,11 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('OrderItems', 'OrderItems_ibfk_1');
+    await queryInterface.removeConstraint('OrderItems', 'OrderItems_ibfk_2');
+
     await queryInterface.removeConstraint('OrderItems', 'unique_order_product');
+
     await queryInterface.dropTable('OrderItems');
   },
 };

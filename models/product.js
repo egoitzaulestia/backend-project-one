@@ -2,11 +2,6 @@
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Product.belongsToMany(models.Category, {
         through: models.ProductCategory,
@@ -28,11 +23,67 @@ module.exports = (sequelize, DataTypes) => {
 
   Product.init(
     {
-      name: DataTypes.STRING,
-      description: DataTypes.TEXT,
-      price: DataTypes.INTEGER,
-      imageUrl: DataTypes.STRING,
-      stock: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Introduce product name, please',
+          },
+          notEmpty: {
+            msg: 'Introduce product name, please',
+          },
+        },
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Introduce product description, please',
+          },
+          notEmpty: {
+            msg: 'Introduce product description, please',
+          },
+        },
+      },
+      price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Introduce product price, please',
+          },
+          isInt: {
+            msg: 'Introduce product price, please',
+          },
+          min: {
+            args: [0],
+            msg: 'Price must be 0 or greater',
+          },
+        },
+      },
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isUrl: {
+            msg: 'Must be a valid URL',
+          },
+        },
+      },
+      stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Introduce product stock, please',
+          },
+          isInt: {
+            msg: 'Introduce product stock, please',
+          },
+        },
+      },
     },
     {
       sequelize,

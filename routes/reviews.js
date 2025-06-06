@@ -4,9 +4,9 @@ const ReviewController = require('../controllers/ReviewController');
 const { authentication } = require('../middlewares/authentication');
 
 // router.use('/', authentication, ReviewController.create);
-router.post('/', ReviewController.create);
+router.post('/', authentication, ReviewController.create);
 router.get('/', ReviewController.getAll);
-router.put('/id/:id', ReviewController.update);
-router.delete('/id/:id', ReviewController.delete);
+router.put('/id/:id', authentication, ReviewController.update);
+router.delete('/id/:id', authentication, ReviewController.delete);
 
 module.exports = router;

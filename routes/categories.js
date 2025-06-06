@@ -5,12 +5,12 @@ const { authentication, isAdmin } = require('../middlewares/authentication');
 const fakeAdmin = require('../middlewares/fakeAdmin');
 
 // router.post("/", CategoryController.insert);
-router.post('/', fakeAdmin, isAdmin, CategoryController.insert);
+router.post('/', authentication, isAdmin, CategoryController.insert);
 router.get('/', CategoryController.getAll);
 router.get('/only', CategoryController.getAllAlone);
 router.get('/id/:id', CategoryController.getById);
 router.get('/name/:name', CategoryController.getOneByName);
-router.put('/:id', CategoryController.update);
-router.delete('/:id', CategoryController.delete);
+router.put('/:id', authentication, isAdmin, CategoryController.update);
+router.delete('/:id', authentication, isAdmin, CategoryController.delete);
 
 module.exports = router;

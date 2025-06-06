@@ -36,7 +36,7 @@ sequelize model:generate \
 # 3. User (FK → RoleId)
 sequelize model:generate \
   --name User \
-  --attributes name:string,email:string,password:string,RoleId:integer
+  --attributes name:string,email:string,password:string,confirmed:boolean,RoleId:integer
 
 # 4. Product (no direct CategoryId anymore)
 sequelize model:generate \
