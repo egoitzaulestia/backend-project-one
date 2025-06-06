@@ -20,7 +20,7 @@ const createOrder = async (req, res) => {
     let totalAmount = 0;
     const orderItems = [];
 
-    // 2. Calcular montos y preparar datos
+    // 2. Calcular total y preparar datos
     for (const { ProductId, quantity } of products) {
       const product = foundProducts.find(p => p.id === ProductId);
       if (!product) throw new Error(`Producto no encontrado: ${ProductId}`);
