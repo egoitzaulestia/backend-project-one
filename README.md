@@ -1,11 +1,18 @@
 # 🛒 E-Commerce Backend API with Node.js & Sequelize
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?logo=sequelize&logoColor=white)](https://sequelize.org/)
-
 A robust RESTful API for an e-commerce platform built with Node.js, Express, and Sequelize (MySQL). Features user authentication, product management, order processing, and admin controls.
+
+---
+
+## 🚀 Tech Stack
+
+- **Node.js** ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
+- **Express.js** ![Express](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=white)
+- **MySQL** ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
+- **Postman** ![Postman](https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=white)
+- **DBeaver** ![DBeaver](https://img.shields.io/badge/DBeaver-372923?logo=dbeaver&logoColor=white)
+- **JavaScript** ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+- **Sequelize** [![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?logo=sequelize&logoColor=white)](https://sequelize.org/)
 
 ---
 
