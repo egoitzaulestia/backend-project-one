@@ -50,11 +50,12 @@ Below is the current MySQL schema as visualized in DBeaver:
 - **Users → Tokens (1-to-Many)** - One user can have multiple authentication tokens
 - **Roles → Users (1-to-Many)** - One role can be assigned to multiple users
 - **Orders → OrderItems (1-to-Many)** - One order can contain multiple items
-- **Products → OrderItems (1-to-Many)** - One product can appear in multiple order items
 - **Products → Reviews (1-to-Many)** - One product can receive multiple reviews
 
 ### Many-to-Many Relationships
 
+- **Products ↔ Orders (Many-to-Many)** - Products can appear in multiple orders, and orders can contain multiple products
+  - **OrderItems (Junction Table)** - Resolves the many-to-many relationship between Products and Orders
 - **Products ↔ Categories (Many-to-Many)** - Products can belong to multiple categories, and categories can contain multiple products
   - **ProductCategories (Junction Table)** - Resolves the many-to-many relationship between Products and Categories
 
