@@ -28,7 +28,7 @@ const UserController = {
         ...req.body,
         password: hashedPassword,
         confirmed: false,
-        RoleId: 1, // we initaite every user as 'user' role
+        RoleId: 3, // we initaite every user as 'user' role
       });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {

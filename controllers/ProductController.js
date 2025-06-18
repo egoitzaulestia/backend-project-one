@@ -7,6 +7,7 @@ const {
   Sequelize,
 } = require('../models/index');
 const { Op } = Sequelize;
+// const upload = require('../middlewares/upload');
 
 const ProductController = {
   // // CREATE with Multer

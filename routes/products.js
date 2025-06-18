@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ProductController = require('../controllers/ProductController');
-const upload = require('../middlewares/upload');
+// const upload = require('../middlewares/upload');
 const { authentication, isAdmin } = require('../middlewares/authentication');
 
 // router.post(
