@@ -148,6 +148,38 @@ const UserController = {
     }
   },
 
+  async getInfo(req, res) {
+    try {
+      // req.user.id is set by your auth middleware after verifying the token
+      const user = await User.findByPk(req.user.id, {
+        attributes: { exclude: ['password'] }, // never send the hash
+        include: [
+          // example: include orders and order items
+          {
+            model: Order,
+            include: [
+              {
+                model: OrderItem,
+                include: [Product],
+              },
+            ],
+          },
+          // example: include reviews
+          { model: Review },
+        ],
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Unable to fetch user info', error });
+    }
+  },
+
   async loggedUserWithOrders(req, res) {
     try {
       const user = await User.findByPk(req.user.id, {
