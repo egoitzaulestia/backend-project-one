@@ -128,6 +128,7 @@ const UserController = {
     try {
       const user = await User.findOne({
         where: { id: req.params.id },
+        attributes: { exclude: ['password'] }, // never send the hash
         include: [
           {
             model: Order,
@@ -150,11 +151,9 @@ const UserController = {
 
   async getInfo(req, res) {
     try {
-      // req.user.id is set by your auth middleware after verifying the token
       const user = await User.findByPk(req.user.id, {
         attributes: { exclude: ['password'] }, // never send the hash
         include: [
-          // example: include orders and order items
           {
             model: Order,
             include: [
@@ -164,7 +163,7 @@ const UserController = {
               },
             ],
           },
-          // example: include reviews
+
           { model: Review },
         ],
       });
