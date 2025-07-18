@@ -8,7 +8,6 @@ const {
   Sequelize,
 } = require('../models/index');
 const { Op } = Sequelize;
-const { UniqueConstraintError } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/config')['development'];
@@ -29,15 +28,15 @@ const UserController = {
         ...req.body,
         password: hashedPassword,
         confirmed: false,
-        RoleId: 1, // we initaite every user as 'user' role
+        RoleId: 3, // we initaite every user as 'user' role
       });
 
       const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
         expiresIn: '48h',
       });
       // IMPORTANT: Correct the "2" in users2 !!!
-      // const url = `http://localhost:3000/users/confirm/${emailToken}`; // local Backend URL
-      const url = `http://localhost:5173/confirm/${emailToken}`; // local Frontend URL
+      // const url = `http://localhost:3000/users/confirm/${emailToken}`; // Backend route
+      const url = `http://localhost:5173/confirm/${emailToken}`; // Frontend route
       await transporter.sendMail({
         to: req.body.email,
         subject: 'Confirm your regist',
@@ -52,11 +51,7 @@ const UserController = {
         user,
       });
     } catch (error) {
-      if (err instanceof UniqueConstraintError) {
-        return res.status(400).send({
-          message: 'That email is already registered. Try logging in instead.',
-        });
-      }
+      console.error(error);
       next(error);
     }
   },
