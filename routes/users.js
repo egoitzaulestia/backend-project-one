@@ -9,10 +9,6 @@ router.post('/login', UserController.login);
 router.delete('/logout', authentication, UserController.logout);
 router.get('/id/:id', authentication, UserController.getById);
 router.get('/info', authentication, UserController.getInfo);
-router.get(
-  '/logged-user-with-orders',
-  authentication,
-  UserController.loggedUserWithOrders,
-);
+router.get('/with-orders', authentication, UserController.loggedUserWithOrders);
 
 module.exports = router;
