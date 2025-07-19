@@ -4,20 +4,6 @@ const ProductController = require('../controllers/ProductController');
 // const upload = require('../middlewares/upload');
 const { authentication, isAdmin } = require('../middlewares/authentication');
 
-// router.post(
-//   '/',
-//   authentication,
-//   isAdmin,
-//   upload.single('image'),
-//   ProductController.insert,
-// );
-// router.put(
-//   '/id/:id',
-//   authentication,
-//   isAdmin,
-//   upload.single('image'),
-//   ProductController.update,
-// );
 router.post('/', authentication, isAdmin, ProductController.insert);
 router.put('/id/:id', authentication, isAdmin, ProductController.update);
 router.delete('/id/:id', authentication, isAdmin, ProductController.delete);
