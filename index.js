@@ -20,6 +20,8 @@ app.use(
 
 app.use(express.json());
 
+// app.get('/health', (req, res) => res.send('ok'));
+
 app.use('/categories', require('./routes/categories'));
 app.use('/orders', require('./routes/orders'));
 app.use('/reviews', require('./routes/reviews'));
